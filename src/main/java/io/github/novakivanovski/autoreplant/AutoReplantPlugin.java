@@ -10,6 +10,7 @@ public class AutoReplantPlugin extends JavaPlugin {
         if (command != null) {
             command.setExecutor(new CommandEnable());
         }
+        getServer().getPluginManager().registerEvents(new CropBreakListener(), this);
     }
 
     @Override
