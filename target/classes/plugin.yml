@@ -6,4 +6,9 @@ author: Novak Ivanovski
 website: https://github.com/novakivanovski
 load: POSTWORLD
 database: false
-prefix: autoreplant
+prefix: AutoReplant
+
+commands:
+  autoreplant:
+    description: Enable autoreplant feature.
+    usage: /autoreplant

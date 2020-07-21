@@ -7,3 +7,8 @@ website: https://github.com/novakivanovski
 load: POSTWORLD
 database: false
 prefix: AutoReplant
+
+commands:
+  autoreplant:
+    description: Enable autoreplant feature.
+    usage: /autoreplant

@@ -5,7 +5,7 @@ public class AutoReplantPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("onEnable is called");
+        this.getCommand("autoreplant").setExecutor(new CommandEnable());
     }
 
     @Override
