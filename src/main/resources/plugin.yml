@@ -1,0 +1,9 @@
+name: AutoReplantPlugin
+version: 1.6.1-R1.0
+main: io.github.novakivanovski.autoreplant.AutoReplantPlugin
+description: Create a machine to automatically replant your seeds!
+author: Novak Ivanovski
+website: https://github.com/novakivanovski
+load: POSTWORLD
+database: false
+prefix: AutoReplant
