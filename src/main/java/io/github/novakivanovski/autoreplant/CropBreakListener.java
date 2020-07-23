@@ -36,7 +36,6 @@ public class CropBreakListener implements Listener {
                     Block currentBlock = behindBlock.getRelative(actualDirection);
                     while (currentBlock.getType() == Material.FARMLAND) {
                         Block cropBlock = currentBlock.getRelative(BlockFace.UP);
-                        Bukkit.broadcastMessage("Breaking block: " + cropBlock.getType());
                         cropBlock.breakNaturally();
                         cropBlock.setType(Material.WHEAT);
                         currentBlock = currentBlock.getRelative(actualDirection);
