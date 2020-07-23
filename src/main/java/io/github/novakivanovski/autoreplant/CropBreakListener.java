@@ -12,6 +12,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 
 public class CropBreakListener implements Listener {
 
+    public static final int MAX_LENGTH = 10;
+
     @EventHandler
     public void onCropBreak(BlockRedstoneEvent event) {
         Block block = event.getBlock();
@@ -20,13 +22,24 @@ public class CropBreakListener implements Listener {
             BlockFace behind = lever.getFacing().getOppositeFace();
             Block behindBlock = block.getRelative(behind);
             if (behindBlock.getType() == Material.REDSTONE_BLOCK) {
-                Bukkit.broadcastMessage("Lever attached to Redstone block pulled.");
-
                 BlockFace[] possibleDirections = {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH};
+                BlockFace actualDirection = null;
                 for (BlockFace direction : possibleDirections) {
-                    Block adjacentBlock = block.getRelative(direction);
-                    if (adjacentBlock.getType() == Material.GRASS) {
-                        Bukkit.broadcastMessage("Grass direction: " + direction.toString());
+                    Block adjacentBlock = behindBlock.getRelative(direction);
+                    if (adjacentBlock.getType() == Material.FARMLAND) {
+                        actualDirection = direction;
+                        break;
+                    }
+                }
+
+                if (actualDirection != null) {
+                    Block currentBlock = behindBlock.getRelative(actualDirection);
+                    while (currentBlock.getType() == Material.FARMLAND) {
+                        Block cropBlock = currentBlock.getRelative(BlockFace.UP);
+                        Bukkit.broadcastMessage("Breaking block: " + cropBlock.getType());
+                        cropBlock.breakNaturally();
+                        cropBlock.setType(Material.WHEAT);
+                        currentBlock = currentBlock.getRelative(actualDirection);
                     }
                 }
             }
