@@ -68,6 +68,7 @@ public class BlockTools {
                 if (crop.getAge() == crop.getMaximumAge()) {
                     harvest += 1;
                     crop.setAge(0);
+                    aboveBlock.setBlockData(crop);
                 }
             }
         }
