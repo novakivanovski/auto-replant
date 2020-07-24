@@ -8,39 +8,21 @@ import org.bukkit.block.data.type.Switch;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import java.util.List;
 
 
 public class CropBreakListener implements Listener {
 
-    public static final int MAX_LENGTH = 10;
-
     @EventHandler
-    public void onCropBreak(BlockRedstoneEvent event) {
+    public void onLeverPull(BlockRedstoneEvent event) {
         Block block = event.getBlock();
         if (block.getType() == Material.LEVER) {
-            Switch lever = (Switch) block.getBlockData();
-            BlockFace behind = lever.getFacing().getOppositeFace();
-            Block behindBlock = block.getRelative(behind);
-            if (behindBlock.getType() == Material.REDSTONE_BLOCK) {
-                BlockFace[] possibleDirections = {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH};
-                BlockFace actualDirection = null;
-                for (BlockFace direction : possibleDirections) {
-                    Block adjacentBlock = behindBlock.getRelative(direction);
-                    if (adjacentBlock.getType() == Material.FARMLAND) {
-                        actualDirection = direction;
-                        break;
-                    }
-                }
-
-                if (actualDirection != null) {
-                    Block currentBlock = behindBlock.getRelative(actualDirection);
-                    while (currentBlock.getType() == Material.FARMLAND) {
-                        Block cropBlock = currentBlock.getRelative(BlockFace.UP);
-                        cropBlock.breakNaturally();
-                        cropBlock.setType(Material.WHEAT);
-                        currentBlock = currentBlock.getRelative(actualDirection);
-                    }
-                }
+            Block redstoneBlock = BlockTools.getBlockBehindLever(block);
+            if (redstoneBlock.getType() == Material.REDSTONE_BLOCK) {
+                BlockFace direction = BlockTools.getDirectionOfBlock(redstoneBlock, Material.FARMLAND);
+                if (direction == null) return;
+                List<Block> farm = BlockTools.getConsecutiveBlocksOfType(redstoneBlock, direction, Material.FARMLAND);
+                BlockTools.harvestCrops(farm);
             }
         }
     }
