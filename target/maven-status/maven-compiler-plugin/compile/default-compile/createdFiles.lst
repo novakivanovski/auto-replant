@@ -1,3 +1,4 @@
 io\github\novakivanovski\autoreplant\AutoReplantPlugin.class
 io\github\novakivanovski\autoreplant\CropBreakListener.class
+io\github\novakivanovski\autoreplant\BlockTools.class
 io\github\novakivanovski\autoreplant\CommandEnable.class
