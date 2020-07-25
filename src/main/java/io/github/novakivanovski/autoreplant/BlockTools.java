@@ -1,21 +1,38 @@
 package io.github.novakivanovski.autoreplant;
 
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.type.Switch;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 public class BlockTools {
+    /* Excluded: Melon, Pumpkin, Bamboo, Cocoa & Sugar Cane.
+    These require different conditions to grow than the rest.
+    */
 
     private static final BlockFace[] directions = {BlockFace.NORTH,
             BlockFace.EAST,
             BlockFace.WEST,
             BlockFace.SOUTH};
+
+    static final Map<Material, Material> cropsToItems = ImmutableMap.of(
+            Material.WHEAT, Material.WHEAT,
+            Material.BEETROOTS, Material.BEETROOT,
+            Material.CARROTS, Material.CARROT,
+            Material.POTATOES, Material.POTATO
+    );
+
+    public static boolean isCrop(Block block) {
+        for (Material cropType : cropsToItems.keySet()) {
+            if (cropType == block.getType()) return true;
+        }
+        return false;
+    }
 
     public static Optional<Block> getAdjacentBlockOfType(Block block, Material material) {
         for (BlockFace direction: directions) {
@@ -54,14 +71,20 @@ public class BlockTools {
         return chestBlock.map(value -> (Chest) value.getState());
     }
 
-    public static int harvestCrops(List<Block> farmlandBlocks) {
-        int harvest = 0;
+    public static Map<Material, Integer> harvestCrops(List<Block> farmlandBlocks) {
+        Map<Material, Integer>  harvest = new HashMap<>();
+        for (Material cropType : cropsToItems.keySet()) {
+            harvest.put(cropsToItems.get(cropType), 0);
+        }
+
         for (Block block : farmlandBlocks) {
             Block aboveBlock = block.getRelative(BlockFace.UP);
-            if (aboveBlock.getType() == Material.WHEAT) {
+            if (isCrop(aboveBlock)) {
                 Ageable crop = (Ageable) aboveBlock.getBlockData();
                 if (crop.getAge() == crop.getMaximumAge()) {
-                    harvest += 1;
+                    Material cropType = crop.getMaterial();
+                    Material item = cropsToItems.get(cropType);
+                    harvest.put(item, harvest.get(item) + 2);
                     crop.setAge(0);
                     aboveBlock.setBlockData(crop);
                 }
