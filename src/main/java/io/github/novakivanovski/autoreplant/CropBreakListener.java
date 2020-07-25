@@ -21,7 +21,7 @@ public class CropBreakListener implements Listener {
             if (redstoneBlock.getType() == Material.REDSTONE_BLOCK) {
                 Optional<Chest> chest = BlockTools.getAdjacentChest(redstoneBlock);
                 Optional<BlockFace> direction = BlockTools.getDirectionOfBlock(redstoneBlock, Material.FARMLAND);
-                if (chest.isEmpty() || direction.isEmpty()) return;
+                if (!chest.isPresent() || !direction.isPresent()) return;
                 List<Block> farm = BlockTools.getConsecutiveBlocksOfType(redstoneBlock, direction.get(), Material.FARMLAND);
                 int harvestCount = BlockTools.harvestCrops(farm);
                 ItemStack crops = new ItemStack(Material.WHEAT, harvestCount);
